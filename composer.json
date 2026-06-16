@@ -4,6 +4,14 @@
     "type": "library",
     "license": "MIT",
     "keywords": ["madad", "laravel", "sdk", "products", "sync"],
+    "homepage": "https://github.com/algultamer/madad-laravel-sdk-v1",
+    "authors": [
+        { "name": "Madad", "homepage": "https://madad-app.com" }
+    ],
+    "support": {
+        "issues": "https://github.com/algultamer/madad-laravel-sdk-v1/issues",
+        "source": "https://github.com/algultamer/madad-laravel-sdk-v1"
+    },
     "require": {
         "php": "^8.2",
         "illuminate/contracts": "^11.0|^12.0",
