@@ -73,6 +73,33 @@ self-paced to the rate limit). With queueing enabled, run a worker:
 
 ---
 
+### Sync only part of your catalog (optional)
+
+By default **every** product syncs. If your store sells things Madad doesn't
+list (e.g. a general store with paint *and* cleaning supplies), add a
+`shouldSyncToMadad()` method to your model — return `true` only for what belongs
+on Madad. You own the rule; you know your category tree:
+
+```php
+public function shouldSyncToMadad(): bool
+{
+    // Only sync products under your "Building Materials" branch.
+    return $this->category && $this->category->isDescendantOf($buildingMaterialsId);
+}
+```
+
+The same gate is honored everywhere: create, update, delete, and
+`madad:sync-all`. If you don't define it, everything syncs.
+
+> **Note:** if a product *leaves* scope (e.g. you move it from Paint to
+> Cleaning so `shouldSyncToMadad()` now returns `false`), it is no longer pushed
+> but is **not** auto-removed from Madad. Delete the record (or call
+> `$product->madadDelete()` while it's still in scope) to remove it.
+
+> **Large catalogs:** to avoid loading out-of-scope rows during `madad:sync-all`,
+> you may also add a query scope `scopeMadadSyncable($query)` — the command uses
+> it as a pre-filter (the per-row check still applies).
+
 ### Verify the connection
 ```php
 use Madad\Sdk\Facades\Madad;

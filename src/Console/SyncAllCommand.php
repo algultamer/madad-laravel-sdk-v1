@@ -41,28 +41,40 @@ class SyncAllCommand extends Command
         try {
             $queued = (bool) config('madad.queue.enabled', true);
             $sleep = (int) $this->option('sleep');
-            $total = $model::query()->count();
 
-            $this->info("Syncing {$total} product(s) to Madad ".($queued ? '(queued)' : '(inline)').'...');
+            // Optional query-level pre-filter for large catalogs; the per-row
+            // shouldSyncToMadad() gate below is always applied regardless.
+            $query = $model::query()
+                ->when(method_exists($model, 'scopeMadadSyncable'), fn ($q) => $q->madadSyncable());
+
+            $total = (clone $query)->count();
+            $synced = 0;
+
+            $this->info("Scanning {$total} product(s) ".($queued ? '(queued)' : '(inline)').'...');
             $bar = $this->output->createProgressBar($total);
             $bar->start();
 
-            $model::query()->chunkById((int) $this->option('chunk'), function ($rows) use ($queued, $sleep, $bar) {
+            $query->chunkById((int) $this->option('chunk'), function ($rows) use ($queued, $sleep, $bar, &$synced) {
                 foreach ($rows as $row) {
-                    SyncProductJob::dispatchFor($row::class, $row->getKey());
-                    $bar->advance();
+                    if ($row->shouldSyncToMadad()) {
+                        SyncProductJob::dispatchFor($row::class, $row->getKey());
+                        $synced++;
 
-                    if (! $queued && $sleep > 0) {
-                        usleep($sleep * 1000);
+                        if (! $queued && $sleep > 0) {
+                            usleep($sleep * 1000);
+                        }
                     }
+                    $bar->advance();
                 }
             });
 
             $bar->finish();
             $this->newLine(2);
-            $this->info($queued
-                ? 'Done — jobs dispatched. Make sure a queue worker is running.'
-                : 'Done — all products pushed.');
+            $skipped = $total - $synced;
+            $this->info("Synced {$synced} product(s)".($skipped > 0 ? ", skipped {$skipped} (shouldSyncToMadad)" : '').'.');
+            if ($queued) {
+                $this->line('Jobs dispatched — make sure a queue worker is running.');
+            }
 
             return self::SUCCESS;
         } finally {

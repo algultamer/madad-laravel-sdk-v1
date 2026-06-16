@@ -23,6 +23,24 @@ trait SyncsWithMadad
         }
     }
 
+    /**
+     * Whether this record should sync to Madad. Default: sync everything.
+     *
+     * Override ONLY if you want to sync part of your catalog (e.g. a general
+     * store syncing its paint/building branch but not cleaning supplies):
+     *
+     *     public function shouldSyncToMadad(): bool
+     *     {
+     *         return $this->category?->isUnder('building-materials') ?? false;
+     *     }
+     *
+     * The same gate applies to create, update, delete, and `madad:sync-all`.
+     */
+    public function shouldSyncToMadad(): bool
+    {
+        return true;
+    }
+
     /** Your stable id → Madad's external_id. */
     public function madadExternalId(): string
     {
@@ -37,14 +55,14 @@ trait SyncsWithMadad
 
     public function madadSync(): void
     {
-        if (config('madad.enabled', true)) {
+        if (config('madad.enabled', true) && $this->shouldSyncToMadad()) {
             SyncProductJob::dispatchFor(static::class, $this->getKey());
         }
     }
 
     public function madadDelete(): void
     {
-        if (config('madad.enabled', true)) {
+        if (config('madad.enabled', true) && $this->shouldSyncToMadad()) {
             DeleteProductJob::dispatchExternal($this->madadExternalId());
         }
     }
