@@ -32,7 +32,6 @@ abstract class TestCase extends Orchestra
         $app['config']->set('cache.default', 'array');
         $app['config']->set('queue.default', 'sync');
 
-        $app['config']->set('madad.base_url', 'https://madad-app.test/api/v1');
         $app['config']->set('madad.api_key', 'test-key');
         $app['config']->set('madad.enabled', true);
         $app['config']->set('madad.queue.enabled', true);

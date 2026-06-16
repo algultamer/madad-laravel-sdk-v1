@@ -15,7 +15,6 @@ class MadadServiceProvider extends ServiceProvider
             $config = $app['config']['madad'];
 
             return new MadadClient(
-                baseUrl: $config['base_url'],
                 apiKey: $config['api_key'],
                 timeout: (int) ($config['timeout'] ?? 30),
             );

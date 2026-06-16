@@ -16,9 +16,10 @@ php artisan vendor:publish --tag=madad-config
 
 ## 2. Configure (`config/madad.php` or `.env`)
 
+The only thing you set is your partner key — the API endpoint is built into the SDK:
+
 ```dotenv
 MADAD_API_KEY=your_partner_key
-MADAD_BASE_URL=https://madad-app.com/api/v1
 ```
 
 Then map Madad's fields to **your** columns (dot-paths into your model/relations):

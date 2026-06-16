@@ -12,11 +12,19 @@ use Madad\Sdk\Exceptions\MadadException;
  */
 class MadadClient
 {
+    /**
+     * The full API base is baked into the SDK — partners never configure it.
+     * SDK v1 always talks to /api/v1; a domain or version change ships as a new
+     * SDK release. $baseUrl is an internal override (tests / future sandbox),
+     * not a partner-facing setting.
+     */
+    public const BASE_URL = 'https://madad-app.com/api/v1';
+
     public function __construct(
-        protected string $baseUrl,
         protected ?string $apiKey,
         protected int $timeout = 30,
         protected int $maxRetries = 3,
+        protected ?string $baseUrl = null,
     ) {}
 
     public function ping(): array
@@ -72,7 +80,7 @@ class MadadClient
 
     protected function request(): PendingRequest
     {
-        return Http::baseUrl(rtrim($this->baseUrl, '/'))
+        return Http::baseUrl(rtrim($this->baseUrl ?? self::BASE_URL, '/'))
             ->withToken($this->apiKey)
             ->acceptJson()
             ->asJson()

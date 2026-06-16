@@ -6,11 +6,11 @@ return [
     |--------------------------------------------------------------------------
     | Connection
     |--------------------------------------------------------------------------
-    | Your partner API key (issued by the Madad team) and the Madad base URL.
-    | The key authenticates as: Authorization: Bearer <key>.
+    | All you set is your partner API key (issued by the Madad team). It
+    | authenticates as: Authorization: Bearer <key>. The API endpoint is baked
+    | into the SDK — there is nothing else to configure.
     */
     'api_key' => env('MADAD_API_KEY'),
-    'base_url' => env('MADAD_BASE_URL', 'https://madad-app.com/api/v1'),
     'timeout' => (int) env('MADAD_TIMEOUT', 30),
 
     // Master switch — set false to disable all auto-sync (e.g. during seeding).

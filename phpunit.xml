@@ -24,6 +24,5 @@
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="CACHE_STORE" value="array"/>
         <env name="MADAD_API_KEY" value="test-key"/>
-        <env name="MADAD_BASE_URL" value="https://madad-app.test/api/v1"/>
     </php>
 </phpunit>

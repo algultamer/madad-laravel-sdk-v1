@@ -6,7 +6,7 @@ use Madad\Sdk\MadadClient;
 
 function client(): MadadClient
 {
-    return new MadadClient('https://madad-app.test/api/v1', 'test-key');
+    return new MadadClient('test-key');
 }
 
 it('sends ping with the bearer token', function () {
