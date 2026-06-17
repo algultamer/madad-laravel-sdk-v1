@@ -13,14 +13,14 @@
         "source": "https://github.com/algultamer/madad-laravel-sdk-v1"
     },
     "require": {
-        "php": "^8.2",
-        "illuminate/contracts": "^11.0|^12.0",
-        "illuminate/support": "^11.0|^12.0",
-        "illuminate/database": "^11.0|^12.0",
-        "illuminate/console": "^11.0|^12.0",
-        "illuminate/bus": "^11.0|^12.0",
-        "illuminate/queue": "^11.0|^12.0",
-        "illuminate/http": "^11.0|^12.0",
+        "php": "^8.1",
+        "illuminate/contracts": "^10.0|^11.0|^12.0",
+        "illuminate/support": "^10.0|^11.0|^12.0",
+        "illuminate/database": "^10.0|^11.0|^12.0",
+        "illuminate/console": "^10.0|^11.0|^12.0",
+        "illuminate/bus": "^10.0|^11.0|^12.0",
+        "illuminate/queue": "^10.0|^11.0|^12.0",
+        "illuminate/http": "^10.0|^11.0|^12.0",
         "guzzlehttp/guzzle": "^7.5"
     },
     "require-dev": {
