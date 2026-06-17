@@ -5,6 +5,11 @@ every create/update/delete and ships a one-shot command for the initial load.
 
 Targets Madad Partner API **v1**.
 
+## Requirements
+
+- PHP **8.1+**
+- Laravel **10, 11, or 12**
+
 ---
 
 ## 1. Install
