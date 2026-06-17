@@ -54,6 +54,37 @@ prefers it over the map:
 public function madadPrice(): float { return $this->cents / 100; }
 ```
 
+The same escape hatch exists for `category`, `specifications` and `images`
+(`madadCategory()`, `madadSpecifications()`, `madadImages()`). Each returns the
+payload shape directly and overrides its config map entry.
+
+**Example — one shared placeholder image** (a store with no per-product images):
+
+```php
+// Image URLs must be publicly reachable — Madad fetches and stores its own copy.
+public function madadImages(): array
+{
+    return [
+        ['url' => config('services.madad.placeholder_image'), 'sort_order' => 0],
+    ];
+}
+```
+
+Or use real images when present and fall back to the placeholder otherwise:
+
+```php
+public function madadImages(): array
+{
+    $real = $this->photos->pluck('url')->filter()->values();   // your own relation
+
+    if ($real->isNotEmpty()) {
+        return $real->map(fn ($url, $i) => ['url' => $url, 'sort_order' => $i])->all();
+    }
+
+    return [['url' => config('services.madad.placeholder_image'), 'sort_order' => 0]];
+}
+```
+
 ## 3. Add the trait
 
 ```php
