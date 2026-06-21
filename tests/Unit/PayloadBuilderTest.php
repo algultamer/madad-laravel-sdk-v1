@@ -110,3 +110,20 @@ it('prefers a madad{Field}() override on the model over the map', function () {
 
     expect($payload['price'])->toBe(1.23);
 });
+
+it('serializes a MadadPrice returned from madadPrice() to the wire shape', function () {
+    $p = new class extends Product
+    {
+        protected $table = 'products';
+
+        public function madadPrice(): \Madad\Sdk\Values\MadadPrice
+        {
+            return \Madad\Sdk\Values\MadadPrice::range(40, 70);
+        }
+    };
+    $p->forceFill(['sku' => 'SKU-9', 'title' => 'X', 'amount' => 999])->save();
+
+    $payload = PayloadBuilder::build($p, fullMap());
+
+    expect($payload['price'])->toBe(['type' => 'range', 'price' => 40.0, 'max_price' => 70.0]);
+});

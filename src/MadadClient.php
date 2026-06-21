@@ -70,6 +70,11 @@ class MadadClient
 
     public function updatePrice(string $externalId, array $data): array
     {
+        // Accept a MadadPrice value object for `price` (it serializes to {type, price, max_price}).
+        if (($data['price'] ?? null) instanceof \Madad\Sdk\Values\MadadPrice) {
+            $data['price'] = $data['price']->toArray();
+        }
+
         return $this->send('patch', '/partner/products/'.rawurlencode($externalId).'/price', $data);
     }
 

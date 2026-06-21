@@ -5,6 +5,7 @@ namespace Madad\Sdk\Support;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Madad\Sdk\Values\MadadPrice;
 
 /**
  * Builds a Madad product payload from a partner model using the config map.
@@ -58,7 +59,10 @@ class PayloadBuilder
     {
         $method = 'madad'.Str::studly($field);
         if (method_exists($model, $method)) {
-            return $model->{$method}();
+            $value = $model->{$method}();
+
+            // A MadadPrice value object serializes to the wire shape {type, price, max_price}.
+            return $value instanceof MadadPrice ? $value->toArray() : $value;
         }
 
         return is_string($path) ? data_get($model, $path) : null;
